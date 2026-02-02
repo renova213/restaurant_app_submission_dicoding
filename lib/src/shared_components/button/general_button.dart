@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../config/config.dart';
 
-class FilledButton extends StatelessWidget {
+class GeneralButton extends StatelessWidget {
   final TextStyle? textStyle;
   final bool infinity;
   final Widget child;
@@ -13,7 +13,7 @@ class FilledButton extends StatelessWidget {
   final Function()? onPressed;
   final bool disableButton;
 
-  const FilledButton({
+  const GeneralButton({
     super.key,
     this.onPressed,
     this.textStyle,

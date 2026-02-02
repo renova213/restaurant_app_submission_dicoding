@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../../config/config.dart';
+import '../../../../../../core/core.dart';
 import '../../../../../../shared_components/shared_components.dart';
 import '../../../../domain/domain.dart';
 import '../../../../routes/routes.dart';
@@ -14,36 +15,68 @@ import '../widgets/widgets.dart';
 
 class DetailRestaurantScreen extends StatelessWidget {
   final int index;
-  const DetailRestaurantScreen({super.key, required this.index});
+  final String restaurantId;
+  const DetailRestaurantScreen({
+    super.key,
+    required this.index,
+    required this.restaurantId,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: BlocBuilder<DetailRestaurantCubit, DetailRestaurantState>(
-          builder: (context, state) {
-            if (state is DetailRestaurantLoading) {
+        child: Consumer<DetailRestaurantProvider>(
+          builder: (context, provider, _) {
+            if (provider.restaurantState.isLoading) {
               return const Center(child: CircularProgressIndicator());
             }
 
-            if (state is DetailRestaurantError) {
+            if (provider.restaurantState.isError) {
               return Center(
-                child: Text(
-                  state.message,
-                  style: TextStyleHelper.apply(
-                    context: context,
-                    size: .body1,
-                    style: .regular,
-                    color: AppColors.red,
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      provider.errorMessage,
+                      style: TextStyleHelper.apply(
+                        context: context,
+                        size: .body1,
+                        style: .regular,
+                        color: AppColors.red,
+                      ),
+                    ),
+
+                    16.verticalSpace(),
+
+                    SizedBox(
+                      width: context.width * 0.7,
+                      child: GeneralButton(
+                        onPressed: () {
+                          context
+                              .read<DetailRestaurantProvider>()
+                              .fetchDetailRestaurants(restaurantId);
+                        },
+                        child: GeneralText(
+                          text: "Refresh",
+                          style: TextStyleHelper.apply(
+                            context: context,
+                            size: .body1,
+                            style: .semiBold,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               );
             }
 
-            if (state is DetailRestaurantLoaded) {
+            if (provider.restaurantState.isLoaded) {
               return _body(
                 context: context,
-                detailRestaurant: state.detailRestaurant,
+                detailRestaurant: provider.detailRestaurant,
                 index: index,
               );
             }
@@ -180,6 +213,21 @@ class DetailRestaurantScreen extends StatelessWidget {
                     ],
                   ),
 
+                  4.verticalSpace(),
+
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: Text(
+                      detailRestaurant.address,
+                      style: TextStyleHelper.apply(
+                        context: context,
+                        size: .body1,
+                        style: .regular,
+                        color: AppColors.greyShade600,
+                      ),
+                    ),
+                  ),
+
                   24.verticalSpace(),
 
                   Text(
@@ -215,13 +263,10 @@ class DetailRestaurantScreen extends StatelessWidget {
 
                   12.verticalSpace(),
 
-                  SizedBox(
-                    height: 200,
-                    child: ListMenu(
-                      menus: detailRestaurant.menus.foods,
-                      placeholderImage:
-                          "https://toppng.com/uploads/preview/clipart-free-seaweed-clipart-draw-food-placeholder-11562968708qhzooxrjly.png",
-                    ),
+                  ListMenu(
+                    menus: detailRestaurant.menus.foods,
+                    placeholderImage:
+                        "https://toppng.com/uploads/preview/clipart-free-seaweed-clipart-draw-food-placeholder-11562968708qhzooxrjly.png",
                   ),
 
                   16.verticalSpace(),
@@ -237,13 +282,10 @@ class DetailRestaurantScreen extends StatelessWidget {
 
                   12.verticalSpace(),
 
-                  SizedBox(
-                    height: 200,
-                    child: ListMenu(
-                      menus: detailRestaurant.menus.drinks,
-                      placeholderImage:
-                          "https://cdn-icons-png.flaticon.com/512/6027/6027935.png",
-                    ),
+                  ListMenu(
+                    menus: detailRestaurant.menus.drinks,
+                    placeholderImage:
+                        "https://cdn-icons-png.flaticon.com/512/6027/6027935.png",
                   ),
 
                   8.verticalSpace(),

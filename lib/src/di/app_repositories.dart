@@ -1,7 +1,5 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import '../features/restaurant/restaurant.dart';
 
-final appRepositories = <RepositoryProvider>[...restaurantRepositories];
-
-final appCubits = <BlocProvider>[...restaurantCubits];
+final appProviders = <ChangeNotifierProvider>[...restaurantProviders];

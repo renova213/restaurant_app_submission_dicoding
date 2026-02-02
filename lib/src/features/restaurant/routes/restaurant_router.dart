@@ -1,5 +1,5 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/core.dart';
 import '../presentation/navigation/navigation.dart';
@@ -14,10 +14,10 @@ final restaurantRouter = [
     path: RestaurantRoutes.shared.dashboard,
     name: RestaurantRoutes.shared.dashboard,
     builder: (context, state) {
-      return BlocProvider(
+      return ChangeNotifierProvider(
         create: (_) =>
-            RestaurantCubit(locator(), locator())..fetchRestaurants(),
-        child: RestaurantDashboardScreen(),
+            RestaurantProvider(locator(), locator())..fetchRestaurants(),
+        child: const RestaurantDashboardScreen(),
       );
     },
   ),
@@ -28,11 +28,14 @@ final restaurantRouter = [
     builder: (context, state) {
       final args = state.extra as RestaurantDetailArgs;
 
-      return BlocProvider(
+      return ChangeNotifierProvider(
         create: (_) =>
-            DetailRestaurantCubit(locator())
+            DetailRestaurantProvider(locator())
               ..fetchDetailRestaurants(args.restaurantId),
-        child: DetailRestaurantScreen(index: args.index),
+        child: DetailRestaurantScreen(
+          index: args.index,
+          restaurantId: args.restaurantId,
+        ),
       );
     },
   ),
@@ -43,8 +46,8 @@ final restaurantRouter = [
     builder: (context, state) {
       final args = state.extra as AddReviewRestaurantArgs;
 
-      return BlocProvider(
-        create: (_) => AddReviewRestaurantCubit(locator()),
+      return ChangeNotifierProvider(
+        create: (_) => AddReviewRestaurantProvider(locator()),
         child: AddReviewRestaurantScreen(
           restaurantId: args.restaurantId,
           onReviewSubmitted: args.onReviewSubmitted,
@@ -59,8 +62,9 @@ final restaurantRouter = [
     builder: (context, state) {
       final args = state.extra as ReviewArgs;
 
-      return BlocProvider(
-        create: (_) => ReviewCubit()..initCustomerReviews(args.customerReviews),
+      return ChangeNotifierProvider(
+        create: (_) =>
+            ReviewProvider()..initCustomerReviews(args.customerReviews),
         child: ReviewScreen(
           restaurantId: args.restaurantId,
           customerReviews: args.customerReviews,

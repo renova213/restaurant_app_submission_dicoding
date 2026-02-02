@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:restaurant_app/src/config/config.dart';
-import 'package:restaurant_app/src/shared_components/shared_components.dart';
+import 'package:provider/provider.dart';
 
+import '../../../../../../config/config.dart';
+import '../../../../../../core/core.dart';
+import '../../../../../../shared_components/shared_components.dart';
 import '../../../../domain/domain.dart';
 import '../../../../domain/usecase/params/params.dart';
 import '../view_model/view_model.dart';
@@ -35,12 +36,38 @@ class _AddReviewRestaurantScreenState extends State<AddReviewRestaurantScreen> {
     super.dispose();
   }
 
+  void _showErrorToast(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 1),
+        content: Text(
+          message,
+          style: TextStyleHelper.apply(
+            context: context,
+            size: .body1,
+            style: .regular,
+            color: AppColors.white,
+          ),
+        ),
+        backgroundColor: AppColors.primaryBackgroundThemeColor(
+          Theme.of(context).brightness,
+        ),
+      ),
+    );
+  }
+
+  void goBack() {
+    context.pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.3,
-        backgroundColor: AppColors.blue,
+        backgroundColor: AppColors.primaryBackgroundThemeColor(
+          Theme.of(context).brightness,
+        ),
         foregroundColor: AppColors.white,
         title: Text(
           "Feedback Screen",
@@ -93,15 +120,15 @@ class _AddReviewRestaurantScreenState extends State<AddReviewRestaurantScreen> {
                   controller: _reviewEditingController,
                 ),
 
-                BlocBuilder<AddReviewRestaurantCubit, AddReviewRestaurantState>(
-                  builder: (context, state) {
+                Consumer<AddReviewRestaurantProvider>(
+                  builder: (context, provider, _) {
                     return Center(
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
-                        width: state is AddReviewRestaurantLoading
+                        width: provider.addReviewState.isLoading
                             ? 80
                             : MediaQuery.of(context).size.width * 0.9,
-                        child: state is AddReviewRestaurantLoading
+                        child: provider.addReviewState.isLoading
                             ? LoadingButton()
                             : SubmitButton(
                                 onSubmit: () async {
@@ -110,7 +137,7 @@ class _AddReviewRestaurantScreenState extends State<AddReviewRestaurantScreen> {
                                           .text
                                           .isNotEmpty) {
                                     final customerReviews = await context
-                                        .read<AddReviewRestaurantCubit>()
+                                        .read<AddReviewRestaurantProvider>()
                                         .addReview(
                                           AddRestaurantReviewParam(
                                             name: _nameEditingController.text,
@@ -124,43 +151,15 @@ class _AddReviewRestaurantScreenState extends State<AddReviewRestaurantScreen> {
                                       _reviewEditingController.clear();
                                       _nameEditingController.clear();
 
-                                      context.pop();
-
                                       widget.onReviewSubmitted(customerReviews);
+
+                                      goBack();
                                     } else {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          duration: const Duration(seconds: 1),
-                                          content: Text(
-                                            "Please fill all the fields",
-                                            style: TextStyleHelper.apply(
-                                              context: context,
-                                              size: .body1,
-                                              style: .regular,
-                                              color: AppColors.white,
-                                            ),
-                                          ),
-                                          backgroundColor: AppColors.blue,
-                                        ),
-                                      );
+                                      _showErrorToast(provider.errorMessage);
                                     }
                                   } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        duration: const Duration(seconds: 1),
-                                        content: Text(
-                                          "Please fill all the fields",
-                                          style: TextStyleHelper.apply(
-                                            context: context,
-                                            size: .body1,
-                                            style: .regular,
-                                            color: AppColors.white,
-                                          ),
-                                        ),
-                                        backgroundColor: AppColors.blue,
-                                      ),
+                                    _showErrorToast(
+                                      "Please fill all the fields",
                                     );
                                   }
                                 },

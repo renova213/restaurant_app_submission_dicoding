@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import 'src/config/config.dart';
-import 'src/di/app_repositories.dart';
-import 'src/features/restaurant/presentation/screens/dashboard/dashboard.dart';
+import 'src/core/core.dart';
+import 'src/features/restaurant/restaurant.dart';
 import 'src/routes/app_router.dart';
 
 class MyApp extends StatefulWidget {
@@ -46,37 +46,31 @@ class _MyAppState extends State<MyApp> {
       onPointerDown: (_) => _startHold(),
       onPointerUp: (_) => _cancelHold(),
       onPointerCancel: (_) => _cancelHold(),
-      child: MultiRepositoryProvider(
-        providers: appRepositories,
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider<ThemeCubit>(
-              create: (_) {
-                return ThemeCubit();
-              },
-            ),
-            ...appCubits,
-          ],
-          child: BlocBuilder<ThemeCubit, ThemeMode>(
-            builder: (context, themeMode) {
-              return MaterialApp.router(
-                themeMode: themeMode,
-                theme: AppTheme.lightTheme,
-                darkTheme: AppTheme.darkTheme,
-                routerConfig: appRouter,
-                builder: (context, child) {
-                  return Scaffold(
-                    body: GestureDetector(
-                      onTap: () {
-                        FocusManager.instance.primaryFocus?.unfocus();
-                      },
-                      child: child ?? const SizedBox.shrink(),
-                    ),
-                  );
-                },
-              );
-            },
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<ThemeProvider>(
+            create: (_) => locator<ThemeProvider>(),
           ),
+        ],
+        child: Consumer<ThemeProvider>(
+          builder: (context, themeProvider, _) {
+            return MaterialApp.router(
+              themeMode: themeProvider.themeMode,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              routerConfig: appRouter,
+              builder: (context, child) {
+                return Scaffold(
+                  body: GestureDetector(
+                    onTap: () {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                    },
+                    child: child ?? const SizedBox.shrink(),
+                  ),
+                );
+              },
+            );
+          },
         ),
       ),
     );

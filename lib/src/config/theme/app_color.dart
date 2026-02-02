@@ -17,4 +17,11 @@ class AppColors {
   static const red = Color(0xFFDC0A2D);
 
   static Color yellowShade900 = Colors.yellow.shade900;
+
+  static Color Function(Brightness brightness) primaryBackgroundThemeColor =
+      (Brightness brightness) {
+        return brightness == Brightness.dark
+            ? AppColors.greyShade600
+            : AppColors.red;
+      };
 }

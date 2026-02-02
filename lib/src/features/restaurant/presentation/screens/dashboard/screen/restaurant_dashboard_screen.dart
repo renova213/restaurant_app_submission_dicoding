@@ -16,6 +16,7 @@ class RestaurantDashboardScreen extends StatelessWidget {
             spacing: 16,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              16.verticalSpace(),
               Row(
                 spacing: 16,
                 children: [

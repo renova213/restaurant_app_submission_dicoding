@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:restaurant_app/src/features/restaurant/data/models/request/add_review_restaurant_request.dart';
 
 import '../../../../../core/core.dart';
+import '../../models/request/request.dart';
 import '../../models/response/response.dart';
 import 'endpoint.dart';
 import 'restaurant_remote_datasource.dart';
@@ -19,7 +19,7 @@ class RestaurantRemoteDatasourceImpl implements RestaurantRemoteDatasource {
 
       return RestaurantResponse.fromJson(response.data);
     } on DioException catch (e) {
-      throw NetworkException(message: e.message ?? 'Unknown network error');
+      throw NetworkException.fromDioException(e);
     }
   }
 
@@ -33,7 +33,7 @@ class RestaurantRemoteDatasourceImpl implements RestaurantRemoteDatasource {
 
       return RestaurantResponse.fromJson(response.data);
     } on DioException catch (e) {
-      throw NetworkException(message: e.message ?? 'Unknown network error');
+      throw NetworkException.fromDioException(e);
     }
   }
 
@@ -46,7 +46,7 @@ class RestaurantRemoteDatasourceImpl implements RestaurantRemoteDatasource {
 
       return DetailRestaurantResponse.fromJson(response.data);
     } on DioException catch (e) {
-      throw NetworkException(message: e.message ?? 'Unknown network error');
+      throw NetworkException.fromDioException(e);
     }
   }
 
@@ -66,7 +66,7 @@ class RestaurantRemoteDatasourceImpl implements RestaurantRemoteDatasource {
                 .toList()
           : [];
     } on DioException catch (e) {
-      throw NetworkException(message: e.message ?? 'Unknown network error');
+      throw NetworkException.fromDioException(e);
     }
   }
 }

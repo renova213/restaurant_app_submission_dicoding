@@ -23,7 +23,9 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
             opacity: progress,
             child: Container(
               alignment: Alignment.centerLeft,
-              color: Colors.lightBlue,
+              color: AppColors.primaryBackgroundThemeColor(
+                Theme.of(context).brightness,
+              ),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Text(

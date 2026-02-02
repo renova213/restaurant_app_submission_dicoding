@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:restaurant_app/src/config/config.dart';
+import 'package:provider/provider.dart';
 
+import '../../../../../../config/config.dart';
+import '../../../../../../core/core.dart';
 import '../../../../../../shared_components/shared_components.dart';
 import '../../../../domain/domain.dart';
 import '../../../../routes/routes.dart';
@@ -33,14 +34,16 @@ class ReviewScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.blue,
+        backgroundColor: AppColors.primaryBackgroundThemeColor(
+          Theme.of(context).brightness,
+        ),
         onPressed: () {
           context.pushNamed(
             RestaurantRoutes.shared.addReviewRestaurant,
             extra: AddReviewRestaurantArgs(
               restaurantId: restaurantId,
               onReviewSubmitted: (customerReviews) {
-                context.read<ReviewCubit>().initCustomerReviews(
+                context.read<ReviewProvider>().initCustomerReviews(
                   customerReviews,
                 );
               },
@@ -52,13 +55,14 @@ class ReviewScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 8),
-          child: BlocBuilder<ReviewCubit, ReviewState>(
-            builder: (context, state) {
-              if (state is ReviewLoading) {
+          child: Consumer<ReviewProvider>(
+            builder: (context, provider, _) {
+              if (provider.reviewState.isLoading) {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (state is ReviewLoaded && state.customerReviews.isEmpty) {
+              if (provider.reviewState.isLoaded &&
+                  provider.customerReviews.isEmpty) {
                 return Center(
                   child: Column(
                     children: [
@@ -75,8 +79,8 @@ class ReviewScreen extends StatelessWidget {
                 );
               }
 
-              if (state is ReviewLoaded) {
-                return ReviewList(customerReviews: state.customerReviews);
+              if (provider.reviewState.isLoaded) {
+                return ReviewList(customerReviews: provider.customerReviews);
               }
 
               return const SizedBox.shrink();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/src/config/config.dart';
+
+import '../../../../../../config/config.dart';
 
 class LoadingButton extends StatelessWidget {
   const LoadingButton({super.key});
@@ -9,7 +10,7 @@ class LoadingButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: null,
       style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.all(AppColors.blue),
+        backgroundColor: WidgetStateProperty.all(AppColors.red),
         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         ),

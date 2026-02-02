@@ -1,26 +1,22 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/core.dart';
 import '../restaurant.dart';
 
-final restaurantRepositories = <RepositoryProvider>[
-  RepositoryProvider<GetRestaurantsUseCase>(
-    create: (_) => locator<GetRestaurantsUseCase>(),
+final restaurantProviders = <ChangeNotifierProvider>[
+  ChangeNotifierProvider<RestaurantProvider>(
+    create: (_) => locator<RestaurantProvider>(),
   ),
-  RepositoryProvider<GetSearchRestaurantsUsecase>(
-    create: (_) => locator<GetSearchRestaurantsUsecase>(),
-  ),
-  RepositoryProvider<GetDetailRestaurantUsecase>(
-    create: (_) => locator<GetDetailRestaurantUsecase>(),
-  ),
-  RepositoryProvider<PostAddReviewRestaurantUsecase>(
-    create: (_) => locator<PostAddReviewRestaurantUsecase>(),
-  ),
-];
 
-final restaurantCubits = <BlocProvider>[
-  BlocProvider(create: (_) => RestaurantCubit(locator(), locator())),
-  BlocProvider(create: (_) => DetailRestaurantCubit(locator())),
-  BlocProvider(create: (_) => AddReviewRestaurantCubit(locator())),
-  BlocProvider(create: (_) => ReviewCubit()),
+  ChangeNotifierProvider<DetailRestaurantProvider>(
+    create: (_) => locator<DetailRestaurantProvider>(),
+  ),
+
+  ChangeNotifierProvider<AddReviewRestaurantProvider>(
+    create: (_) => locator<AddReviewRestaurantProvider>(),
+  ),
+
+  ChangeNotifierProvider<ReviewProvider>(
+    create: (_) => locator<ReviewProvider>(),
+  ),
 ];

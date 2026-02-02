@@ -42,7 +42,7 @@ class NetworkException implements Exception {
             return NetworkException(
               exceptionType: ExceptionType.connectTimeoutException,
               statusCode: error.response?.statusCode,
-              message: 'Connection not established',
+              message: 'Connection Error',
             );
           case DioExceptionType.sendTimeout:
             return NetworkException(

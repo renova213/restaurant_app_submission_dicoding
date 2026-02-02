@@ -31,20 +31,20 @@ Future<void> restaurantInjection() async {
     () => PostAddReviewRestaurantUsecase(locator()),
   );
 
-  // Cubit
-  locator.registerFactory<RestaurantCubit>(
-    () => RestaurantCubit(locator(), locator()),
+  // Providers
+  locator.registerFactory<RestaurantProvider>(
+    () => RestaurantProvider(locator(), locator()),
   );
 
-  locator.registerFactory<DetailRestaurantCubit>(
-    () => DetailRestaurantCubit(locator()),
+  locator.registerFactory<DetailRestaurantProvider>(
+    () => DetailRestaurantProvider(locator()),
   );
 
-  locator.registerFactory<AddReviewRestaurantCubit>(
-    () => AddReviewRestaurantCubit(locator()),
+  locator.registerFactory<AddReviewRestaurantProvider>(
+    () => AddReviewRestaurantProvider(locator()),
   );
 
-  locator.registerFactory<ReviewCubit>(() => ReviewCubit());
+  locator.registerFactory<ReviewProvider>(() => ReviewProvider());
 
-  locator.registerFactory<ThemeCubit>(() => ThemeCubit());
+  locator.registerLazySingleton<ThemeProvider>(() => ThemeProvider());
 }

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../../config/config.dart';
 import '../../../../../../shared_components/input/app_search_bar.dart';
@@ -37,7 +37,7 @@ class _RestaurantSearchBarState extends State<RestaurantSearchBar> {
     _debounce?.cancel();
 
     _debounce = Timer(_debounceDuration, () {
-      context.read<RestaurantCubit>().fetchRestaurants(query: value);
+      context.read<RestaurantProvider>().fetchRestaurants(query: value);
     });
   }
 
@@ -50,19 +50,14 @@ class _RestaurantSearchBarState extends State<RestaurantSearchBar> {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Center(
-        child: BlocBuilder<ThemeCubit, ThemeMode>(
-          builder: (context, themeMode) {
-            final isDark = themeMode == ThemeMode.dark;
-            return AppSearchBar(
-              padding: EdgeInsets.zero,
-              controller: _controller,
-              onChanged: _onQueryChanged,
-              onClear: _onClear,
-              backgroundColor: isDark
-                  ? AppColors.greyShade600
-                  : AppColors.white,
-            );
-          },
+        child: AppSearchBar(
+          padding: EdgeInsets.zero,
+          controller: _controller,
+          onChanged: _onQueryChanged,
+          onClear: _onClear,
+          backgroundColor: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.greyShade600
+              : AppColors.white,
         ),
       ),
     );

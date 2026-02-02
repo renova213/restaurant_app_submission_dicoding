@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import '../../../../../../config/config.dart';
 
 class SubmitButton extends StatelessWidget {
-  final VoidCallback onSubmit;
+  final VoidCallback? onSubmit;
   const SubmitButton({super.key, required this.onSubmit});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.all(AppColors.blue),
+        backgroundColor: onSubmit != null
+            ? WidgetStateProperty.all(AppColors.red)
+            : WidgetStateProperty.all(AppColors.grey),
         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),

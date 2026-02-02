@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import '../view_model/view_model.dart';
 
@@ -8,9 +8,9 @@ class ThemeSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeMode>(
-      builder: (context, themeMode) {
-        final isDark = themeMode == ThemeMode.dark;
+    return Consumer<ThemeProvider>(
+      builder: (context, provider, _) {
+        final isDark = provider.themeMode == ThemeMode.dark;
 
         return AnimatedSwitcher(
           duration: const Duration(milliseconds: 250),
@@ -24,7 +24,7 @@ class ThemeSwitcher extends StatelessWidget {
             key: ValueKey(isDark),
             icon: Icon(isDark ? Icons.dark_mode : Icons.light_mode),
             onPressed: () {
-              context.read<ThemeCubit>().toggleTheme();
+              context.read<ThemeProvider>().toggleTheme();
             },
           ),
         );
