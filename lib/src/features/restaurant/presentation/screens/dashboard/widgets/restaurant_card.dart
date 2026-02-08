@@ -12,10 +12,12 @@ import '../../../navigation/navigation.dart';
 class RestaurantCard extends StatelessWidget {
   final RestaurantItemEntity restaurantItem;
   final int index;
+  final String heroTagId;
   const RestaurantCard({
     super.key,
     required this.restaurantItem,
     required this.index,
+    required this.heroTagId,
   });
 
   @override
@@ -23,10 +25,11 @@ class RestaurantCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         context.pushNamed(
-          RestaurantRoutes.shared.detailRestaurant,
+          RestaurantRoutes.detailRestaurant,
           extra: RestaurantDetailArgs(
             restaurantId: restaurantItem.id,
             index: index,
+            heroTagId: heroTagId,
           ),
         );
       },
@@ -78,7 +81,7 @@ class RestaurantCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Hero(
-                      tag: restaurantItem.name + index.toString(),
+                      tag: restaurantItem.name + heroTagId,
                       child: Text(
                         restaurantItem.name,
                         style: TextStyleHelper.apply(
@@ -92,33 +95,42 @@ class RestaurantCard extends StatelessWidget {
                     6.verticalSpace(),
 
                     Hero(
-                      tag: restaurantItem.city + index.toString(),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            AppAssets.icons.location,
-                            width: 15,
-                            height: 15,
-                          ),
-
-                          4.horizontalSpace(),
-
-                          Text(
-                            restaurantItem.city,
-                            style: TextStyleHelper.apply(
-                              context: context,
-                              size: .body2,
-                              style: .regular,
+                      tag: restaurantItem.city + heroTagId,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              AppAssets.icons.location,
+                              width: 15,
+                              height: 15,
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? AppColors.white
+                                    : AppColors.darkBackground,
+                                BlendMode.srcIn,
+                              ),
                             ),
-                          ),
-                        ],
+
+                            4.horizontalSpace(),
+
+                            Text(
+                              restaurantItem.city,
+                              style: TextStyleHelper.apply(
+                                context: context,
+                                size: .body2,
+                                style: .regular,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 
                     12.verticalSpace(),
 
                     Hero(
-                      tag: restaurantItem.rating.toString() + index.toString(),
+                      tag: restaurantItem.rating.toString() + heroTagId,
                       child: Row(
                         children: [
                           RatingBarIndicator(

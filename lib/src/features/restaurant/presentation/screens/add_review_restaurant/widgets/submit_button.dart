@@ -11,7 +11,11 @@ class SubmitButton extends StatelessWidget {
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: onSubmit != null
-            ? WidgetStateProperty.all(AppColors.red)
+            ? WidgetStateProperty.all(
+                Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.greyShade600
+                    : AppColors.red,
+              )
             : WidgetStateProperty.all(AppColors.grey),
         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

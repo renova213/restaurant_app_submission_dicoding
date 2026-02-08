@@ -20,6 +20,20 @@ class _MyAppState extends State<MyApp> {
   Timer? _holdTimer;
   static const _holdDuration = Duration(seconds: 2);
 
+  @override
+  void initState() {
+    super.initState();
+
+    locator<ThemeProvider>().loadThemePreference();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _holdTimer?.cancel();
+  }
+
   void _startHold() {
     _holdTimer?.cancel();
     _holdTimer = Timer(_holdDuration, _onHoldTriggered);
@@ -31,12 +45,6 @@ class _MyAppState extends State<MyApp> {
 
   void _onHoldTriggered() {
     ChuckerFlutter.showChuckerScreen();
-  }
-
-  @override
-  void dispose() {
-    _holdTimer?.cancel();
-    super.dispose();
   }
 
   @override

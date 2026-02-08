@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../../config/config.dart';
 import '../../../../../../shared_components/shared_components.dart';
 import '../../../../domain/domain.dart';
+import '../view_model/view_model.dart';
 
 class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
   final DetailRestaurantEntity detailRestaurant;
@@ -46,17 +48,70 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
             opacity: 1 - progress,
             child: Hero(
               tag: detailRestaurant.pictureId,
-              child: AppNetworkImage(
-                imageUrl: detailRestaurant.pictureId,
-                placeholder: SkeletonContainer(
-                  width: 120,
-                  height: 80,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    bottomLeft: Radius.circular(20),
+              child: Stack(
+                children: [
+                  AppNetworkImage(
+                    imageUrl: detailRestaurant.pictureId,
+                    width: context.width,
+                    height: context.height,
+                    placeholder: SkeletonContainer(
+                      width: context.width,
+                      height: context.height,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        bottomLeft: Radius.circular(20),
+                      ),
+                    ),
+                    fit: BoxFit.fill,
                   ),
-                ),
-                fit: BoxFit.cover,
+
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 16, bottom: 16),
+                      child: Consumer<DetailRestaurantProvider>(
+                        builder: (context, provider, _) => IconButton(
+                          onPressed: () async {
+                            final messenger = ScaffoldMessenger.of(context);
+                            final brightness = Theme.of(context).brightness;
+                            final textStyle = TextStyleHelper.apply(
+                              context: context,
+                              size: .body1,
+                              style: .regular,
+                              color: AppColors.white,
+                            );
+
+                            try {
+                              await provider.toggleFavorite();
+                            } finally {
+                              messenger.showSnackBar(
+                                SnackBar(
+                                  duration: const Duration(seconds: 1),
+                                  backgroundColor:
+                                      AppColors.primaryBackgroundThemeColor(
+                                        brightness,
+                                      ),
+                                  content: Text(
+                                    provider.isFavorite
+                                        ? "Added to favorite"
+                                        : "Removed restaurant from favorite",
+                                    style: textStyle,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          icon: Icon(
+                            provider.isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_border_outlined,
+                            color: AppColors.yellowShade900,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

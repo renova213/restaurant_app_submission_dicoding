@@ -9,7 +9,7 @@ class GetDetailRestaurantUsecase
   GetDetailRestaurantUsecase(this.repository);
 
   @override
-  Future<Either<AppError, DetailRestaurantEntity>> call(String id) {
-    return repository.getDetailRestaurant(id);
+  Future<Either<AppError, DetailRestaurantEntity>> call(String id) async {
+    return await repository.getDetailRestaurant(id);
   }
 }

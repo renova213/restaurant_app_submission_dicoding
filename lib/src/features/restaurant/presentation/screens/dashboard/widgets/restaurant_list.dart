@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../../../../config/config.dart';
 import '../../../../../../core/core.dart';
@@ -88,10 +89,12 @@ class RestaurantList extends StatelessWidget {
             itemBuilder: (context, index) {
               RestaurantItemEntity restaurantItem =
                   provider.restaurant.restaurantList[index];
+              final heroTagId = const Uuid().v4();
 
               return RestaurantCard(
                 restaurantItem: restaurantItem,
                 index: index,
+                heroTagId: heroTagId,
               );
             },
             separatorBuilder: (contex, index) => 16.verticalSpace(),

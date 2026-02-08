@@ -44,6 +44,7 @@ class _RestaurantSearchBarState extends State<RestaurantSearchBar> {
   void _onClear() {
     _debounce?.cancel();
     _controller.clear();
+    context.read<RestaurantProvider>().fetchRestaurants(query: "");
   }
 
   @override

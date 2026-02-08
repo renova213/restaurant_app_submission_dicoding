@@ -39,7 +39,7 @@ class ReviewScreen extends StatelessWidget {
         ),
         onPressed: () {
           context.pushNamed(
-            RestaurantRoutes.shared.addReviewRestaurant,
+            RestaurantRoutes.addReviewRestaurant,
             extra: AddReviewRestaurantArgs(
               restaurantId: restaurantId,
               onReviewSubmitted: (customerReviews) {

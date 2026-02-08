@@ -8,7 +8,7 @@ class GetRestaurantsUseCase implements UseCase<RestaurantEntity, NoParams> {
   GetRestaurantsUseCase(this.repository);
 
   @override
-  Future<Either<AppError, RestaurantEntity>> call(NoParams params) {
+  Future<Either<AppError, RestaurantEntity>> call(NoParams params) async {
     return repository.getRestaurants();
   }
 }

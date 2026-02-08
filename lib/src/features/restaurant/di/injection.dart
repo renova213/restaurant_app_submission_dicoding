@@ -2,6 +2,7 @@ import '../../../core/core.dart';
 import '../data/data.dart';
 import '../domain/domain.dart';
 import '../presentation/presentation.dart';
+import '../presentation/screens/favorite_restaurant/view_model/favorite_restaurant_provider.dart';
 
 Future<void> restaurantInjection() async {
   // Datasource
@@ -9,9 +10,13 @@ Future<void> restaurantInjection() async {
     () => RestaurantRemoteDatasourceImpl(locator()),
   );
 
+  locator.registerLazySingleton<RestaurantLocalDataSource>(
+    () => RestaurantLocalDataSourceImpl(locator()),
+  );
+
   // Repository
   locator.registerLazySingleton<RestaurantRepository>(
-    () => RestaurantRepositoryImpl(locator()),
+    () => RestaurantRepositoryImpl(locator(), locator()),
   );
 
   // Usecase
@@ -31,13 +36,29 @@ Future<void> restaurantInjection() async {
     () => PostAddReviewRestaurantUsecase(locator()),
   );
 
+  locator.registerLazySingleton<IsFavoriteRestaurantUsecase>(
+    () => IsFavoriteRestaurantUsecase(locator()),
+  );
+
+  locator.registerLazySingleton<AddFavoriteRestaurantUsecase>(
+    () => AddFavoriteRestaurantUsecase(locator()),
+  );
+
+  locator.registerLazySingleton<RemoveFavoriteRestaurantUsecase>(
+    () => RemoveFavoriteRestaurantUsecase(locator()),
+  );
+
+  locator.registerLazySingleton<FavoriteRestaurantUsecase>(
+    () => FavoriteRestaurantUsecase(locator()),
+  );
+
   // Providers
   locator.registerFactory<RestaurantProvider>(
     () => RestaurantProvider(locator(), locator()),
   );
 
   locator.registerFactory<DetailRestaurantProvider>(
-    () => DetailRestaurantProvider(locator()),
+    () => DetailRestaurantProvider(locator(), locator(), locator(), locator()),
   );
 
   locator.registerFactory<AddReviewRestaurantProvider>(
@@ -45,6 +66,10 @@ Future<void> restaurantInjection() async {
   );
 
   locator.registerFactory<ReviewProvider>(() => ReviewProvider());
+
+  locator.registerFactory<FavoriteRestaurantProvider>(
+    () => FavoriteRestaurantProvider(locator()),
+  );
 
   locator.registerLazySingleton<ThemeProvider>(() => ThemeProvider());
 }

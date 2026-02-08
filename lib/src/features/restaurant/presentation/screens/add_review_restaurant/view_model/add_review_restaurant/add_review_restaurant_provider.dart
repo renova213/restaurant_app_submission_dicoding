@@ -14,7 +14,14 @@ class AddReviewRestaurantProvider extends ChangeNotifier {
   String _errorMessage = "";
   String get errorMessage => _errorMessage;
 
-  //MARK: APIs
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
   Future<List<DetailRestaurantCustomerReviewEntity>> addReview(
     AddRestaurantReviewParam request,
   ) async {
@@ -22,12 +29,11 @@ class AddReviewRestaurantProvider extends ChangeNotifier {
 
     final result = await postAddReviewRestaurantUsecase.call(request);
 
+    if (_disposed) return [];
+
     return result.fold(
       (error) {
-        AppLog.logger.e("error message: ${error.message}");
-        AppLog.logger.e("original error: ${error.originalError}");
         _errorMessage = error.message;
-
         changeAppState(AppState.error);
         return [];
       },
@@ -38,8 +44,8 @@ class AddReviewRestaurantProvider extends ChangeNotifier {
     );
   }
 
-  //MARK: Commons
   void changeAppState(AppState state) {
+    if (_disposed) return;
     if (_addReviewState == state) return;
 
     _addReviewState = state;

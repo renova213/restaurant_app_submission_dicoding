@@ -1,12 +1,28 @@
 import 'package:flutter/material.dart';
 
 class AppSplashProvider extends ChangeNotifier {
-  bool _isReady = false;
-  bool get isReady => _isReady;
+  final bool isTest;
+  bool isReady = false;
+  bool _disposed = false;
+
+  AppSplashProvider({this.isTest = false}) {
+    init();
+  }
 
   Future<void> init() async {
-    await Future.delayed(const Duration(seconds: 2));
-    _isReady = true;
+    if (!isTest) {
+      await Future.delayed(const Duration(seconds: 3));
+    }
+
+    if (_disposed) return;
+
+    isReady = true;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
   }
 }

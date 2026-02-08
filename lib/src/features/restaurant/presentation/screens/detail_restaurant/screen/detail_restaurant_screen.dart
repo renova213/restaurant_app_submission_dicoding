@@ -16,10 +16,12 @@ import '../widgets/widgets.dart';
 class DetailRestaurantScreen extends StatelessWidget {
   final int index;
   final String restaurantId;
+  final String heroTagId;
   const DetailRestaurantScreen({
     super.key,
     required this.index,
     required this.restaurantId,
+    required this.heroTagId,
   });
 
   @override
@@ -78,6 +80,7 @@ class DetailRestaurantScreen extends StatelessWidget {
                 context: context,
                 detailRestaurant: provider.detailRestaurant,
                 index: index,
+                heroTagId: heroTagId,
               );
             }
 
@@ -92,6 +95,7 @@ class DetailRestaurantScreen extends StatelessWidget {
     required BuildContext context,
     required DetailRestaurantEntity detailRestaurant,
     required int index,
+    required String heroTagId,
   }) {
     return CustomScrollView(
       slivers: [
@@ -115,7 +119,7 @@ class DetailRestaurantScreen extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Hero(
-                          tag: detailRestaurant.name + index.toString(),
+                          tag: detailRestaurant.name + heroTagId,
                           child: Text(
                             detailRestaurant.name,
                             style: TextStyleHelper.apply(
@@ -129,9 +133,7 @@ class DetailRestaurantScreen extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Hero(
-                          tag:
-                              detailRestaurant.rating.toString() +
-                              index.toString(),
+                          tag: detailRestaurant.rating.toString() + heroTagId,
                           child: Row(
                             children: [
                               RatingBarIndicator(
@@ -165,35 +167,46 @@ class DetailRestaurantScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Hero(
-                        tag: detailRestaurant.city + index.toString(),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
+                      Row(
+                        children: [
+                          Hero(
+                            tag: detailRestaurant.city + heroTagId,
+
+                            child: SvgPicture.asset(
                               AppAssets.icons.location,
                               width: 15,
                               height: 15,
-                            ),
-
-                            4.horizontalSpace(),
-
-                            Text(
-                              detailRestaurant.city,
-                              style: TextStyleHelper.apply(
-                                context: context,
-                                size: .body1,
-                                style: .regular,
-                                color: AppColors.greyShade600,
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? AppColors.white
+                                    : AppColors.darkBackground,
+                                BlendMode.srcIn,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+
+                          4.horizontalSpace(),
+
+                          Text(
+                            detailRestaurant.city,
+                            style: TextStyleHelper.apply(
+                              context: context,
+                              size: .body1,
+                              style: .regular,
+                              color:
+                                  Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? AppColors.white
+                                  : AppColors.greyShade600,
+                            ),
+                          ),
+                        ],
                       ),
 
                       InkWell(
                         onTap: () {
                           context.pushNamed(
-                            RestaurantRoutes.shared.reviews,
+                            RestaurantRoutes.reviews,
                             extra: ReviewArgs(
                               restaurantId: detailRestaurant.id,
                               customerReviews: detailRestaurant.customerReviews,
@@ -223,7 +236,9 @@ class DetailRestaurantScreen extends StatelessWidget {
                         context: context,
                         size: .body1,
                         style: .regular,
-                        color: AppColors.greyShade600,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? AppColors.white
+                            : AppColors.greyShade600,
                       ),
                     ),
                   ),

@@ -21,13 +21,22 @@ class RestaurantProvider extends ChangeNotifier {
   late RestaurantEntity _restaurant;
   RestaurantEntity get restaurant => _restaurant;
 
-  // MARK: APIs
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
   Future<void> fetchRestaurants({String query = ''}) async {
     changeAppState(AppState.loading);
 
     final result = query.isEmpty
         ? await getRestaurantsUseCase(NoParams())
         : await getSearchRestaurantsUsecase(query);
+
+    if (_disposed) return;
 
     result.fold(
       (error) {
@@ -43,8 +52,8 @@ class RestaurantProvider extends ChangeNotifier {
     );
   }
 
-  //MARK: Commons
   void changeAppState(AppState state) {
+    if (_disposed) return;
     if (_restaurantState == state) return;
 
     _restaurantState = state;

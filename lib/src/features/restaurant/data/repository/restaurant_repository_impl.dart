@@ -1,12 +1,15 @@
 import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../datasources/local/local.dart';
 import '../datasources/remote/remote.dart';
 import '../models/request/request.dart';
+import '../models/response/response.dart';
 
 class RestaurantRepositoryImpl implements RestaurantRepository {
   final RestaurantRemoteDatasource remoteDatasource;
+  final RestaurantLocalDataSource localDatasource;
 
-  RestaurantRepositoryImpl(this.remoteDatasource);
+  RestaurantRepositoryImpl(this.remoteDatasource, this.localDatasource);
 
   @override
   Future<Either<AppError, RestaurantEntity>> getRestaurants() {
@@ -49,6 +52,47 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
           );
 
       return detailRestaurantResponse.map((e) => e.toEntity()).toList();
+    });
+  }
+
+  @override
+  Future<Either<AppError, void>> addFavoriteRestaurant(
+    RestaurantItemEntity restaurant,
+  ) {
+    return safeApiCall(() async {
+      final model = RestaurantItemResponse(
+        id: restaurant.id,
+        name: restaurant.name,
+        description: restaurant.description,
+        pictureId: restaurant.pictureId,
+        city: restaurant.city,
+        rating: restaurant.rating,
+      );
+
+      await localDatasource.insertFavorite(model);
+    });
+  }
+
+  @override
+  Future<Either<AppError, void>> removeFavoriteRestaurant(String id) {
+    return safeApiCall(() async {
+      await localDatasource.removeFavorite(id);
+    });
+  }
+
+  @override
+  Future<Either<AppError, List<RestaurantItemEntity>>>
+  getFavoriteRestaurants() {
+    return safeApiCall(() async {
+      final result = await localDatasource.getFavorites();
+      return result.map((e) => e.toEntity()).toList();
+    });
+  }
+
+  @override
+  Future<Either<AppError, bool>> isFavoriteRestaurant(String id) {
+    return safeApiCall(() async {
+      return await localDatasource.isFavorite(id);
     });
   }
 }

@@ -8,7 +8,7 @@ class GetSearchRestaurantsUsecase implements UseCase<RestaurantEntity, String> {
   GetSearchRestaurantsUsecase(this.repository);
 
   @override
-  Future<Either<AppError, RestaurantEntity>> call(String query) {
-    return repository.searchRestaurants(query);
+  Future<Either<AppError, RestaurantEntity>> call(String query) async {
+    return await repository.searchRestaurants(query);
   }
 }

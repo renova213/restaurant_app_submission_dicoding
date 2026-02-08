@@ -11,8 +11,8 @@ import 'routes.dart';
 
 final restaurantRouter = [
   GoRoute(
-    path: RestaurantRoutes.shared.dashboard,
-    name: RestaurantRoutes.shared.dashboard,
+    path: RestaurantRoutes.dashboard,
+    name: RestaurantRoutes.dashboard,
     builder: (context, state) {
       return ChangeNotifierProvider(
         create: (_) =>
@@ -23,26 +23,28 @@ final restaurantRouter = [
   ),
 
   GoRoute(
-    path: RestaurantRoutes.shared.detailRestaurant,
-    name: RestaurantRoutes.shared.detailRestaurant,
+    path: RestaurantRoutes.detailRestaurant,
+    name: RestaurantRoutes.detailRestaurant,
     builder: (context, state) {
       final args = state.extra as RestaurantDetailArgs;
 
       return ChangeNotifierProvider(
         create: (_) =>
-            DetailRestaurantProvider(locator())
-              ..fetchDetailRestaurants(args.restaurantId),
+            DetailRestaurantProvider(locator(), locator(), locator(), locator())
+              ..fetchDetailRestaurants(args.restaurantId)
+              ..checkIsFavorite(args.restaurantId),
         child: DetailRestaurantScreen(
           index: args.index,
           restaurantId: args.restaurantId,
+          heroTagId: args.heroTagId,
         ),
       );
     },
   ),
 
   GoRoute(
-    path: RestaurantRoutes.shared.addReviewRestaurant,
-    name: RestaurantRoutes.shared.addReviewRestaurant,
+    path: RestaurantRoutes.addReviewRestaurant,
+    name: RestaurantRoutes.addReviewRestaurant,
     builder: (context, state) {
       final args = state.extra as AddReviewRestaurantArgs;
 
@@ -57,8 +59,8 @@ final restaurantRouter = [
   ),
 
   GoRoute(
-    path: RestaurantRoutes.shared.reviews,
-    name: RestaurantRoutes.shared.reviews,
+    path: RestaurantRoutes.reviews,
+    name: RestaurantRoutes.reviews,
     builder: (context, state) {
       final args = state.extra as ReviewArgs;
 

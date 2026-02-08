@@ -10,6 +10,8 @@ Future<void> injection({GlobalKey<NavigatorState>? navigatorKey}) async {
     () => ApiService(baseUrl: AppConfig.mainBaseUrl),
   );
 
+  locator.registerLazySingleton<AppDatabase>(() => AppDatabase());
+
   // MARK: Features
   await restaurantInjection();
 }

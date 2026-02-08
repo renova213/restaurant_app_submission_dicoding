@@ -23,6 +23,10 @@ class RestaurantResponse extends Equatable {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {'restaurants': restaurantList.map((e) => e.toJson()).toList()};
+  }
+
   @override
   List<Object?> get props => [restaurantList];
 }
@@ -66,6 +70,17 @@ class RestaurantItemResponse extends Equatable {
       city: city,
       rating: rating,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'pictureId': pictureId,
+      'city': city,
+      'rating': rating,
+    };
   }
 
   @override

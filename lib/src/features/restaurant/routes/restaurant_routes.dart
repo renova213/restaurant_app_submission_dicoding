@@ -3,8 +3,8 @@ class RestaurantRoutes {
 
   static const shared = RestaurantRoutes();
 
-  final dashboard = '/dashboard';
-  final detailRestaurant = '/detail-restaurant';
-  final addReviewRestaurant = '/add-review-restaurant';
-  final reviews = '/reviews';
+  static const dashboard = '/dashboard';
+  static const detailRestaurant = '/detail-restaurant';
+  static const addReviewRestaurant = '/add-review-restaurant';
+  static const reviews = '/reviews';
 }

@@ -13,4 +13,10 @@ abstract class RestaurantRepository {
     required String review,
     required String name,
   });
+  Future<Either<AppError, void>> addFavoriteRestaurant(
+    RestaurantItemEntity restaurant,
+  );
+  Future<Either<AppError, void>> removeFavoriteRestaurant(String id);
+  Future<Either<AppError, List<RestaurantItemEntity>>> getFavoriteRestaurants();
+  Future<Either<AppError, bool>> isFavoriteRestaurant(String id);
 }
